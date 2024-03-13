@@ -19,4 +19,12 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public User getUser(Integer userId) {
+        return userRepository.findUserByUserID(userId).orElse(null);
+    }
+
+    public User updateUser(Integer userId) {
+
+    }
 }

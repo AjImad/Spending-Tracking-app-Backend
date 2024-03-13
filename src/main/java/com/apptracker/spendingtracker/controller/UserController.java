@@ -1,5 +1,6 @@
 package com.apptracker.spendingtracker.controller;
 
+import com.apptracker.spendingtracker.errorResponse.ErrorResponse;
 import com.apptracker.spendingtracker.model.User;
 import com.apptracker.spendingtracker.service.UserService;
 import jakarta.validation.Valid;
@@ -8,10 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/users")
@@ -37,9 +38,54 @@ public class UserController {
                     .status(HttpStatus.CREATED)
                     .body(newUser);
         } catch (IllegalArgumentException e){
+            String path = "/api/users";
+            String message = "Failed to create user: " + e.getMessage();
+            ErrorResponse errorResponse = getErrorResponse(path, message);
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body("Failed to create user: " + e.getMessage());
+                    .body(errorResponse);
         }
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getUser(@PathVariable Integer userId) {
+        User user = userService.getUser(userId);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            String path = "/api/users/" + userId;
+            String message = "User not found with ID: " + userId;
+            ErrorResponse errorResponse = getErrorResponse(path, message);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+    }
+
+    @PutMapping(path = "/{userId}")
+    public ResponseEntity<Object> updateUser(@PathVariable Integer userId){
+        User user = userService.updateUser(userId);
+        if(user != null){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            String path = "/api/users/" + userId;
+            String message = "User not found with ID: " + userId;
+            ErrorResponse errorResponse = getErrorResponse(path, message);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+    }
+
+    private static ErrorResponse getErrorResponse(String path, String message) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = now.format(formatter);
+        return ErrorResponse.builder()
+                .timestamp(timestamp)
+                .path(path)
+                .message(message)
+                .status(HttpStatus.NOT_FOUND.value())
+                .build();
     }
 }
