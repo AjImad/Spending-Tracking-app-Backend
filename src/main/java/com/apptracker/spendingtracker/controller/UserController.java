@@ -63,14 +63,13 @@ public class UserController {
     }
 
     @PutMapping(path = "/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Integer userId){
-        User user = userService.updateUser(userId);
-        if(user != null){
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } else {
+    public ResponseEntity<Object> updateUser(@PathVariable Integer userId, @RequestBody User user){
+        try{
+            User updatedUser = userService.updateUser(userId, user);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (IllegalArgumentException e){
             String path = "/api/users/" + userId;
-            String message = "User not found with ID: " + userId;
-            ErrorResponse errorResponse = getErrorResponse(path, message);
+            ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(errorResponse);
