@@ -46,4 +46,9 @@ public class UserService {
         System.out.println("storedUser: " + storedUser);
         return storedUser;
     }
+
+    public void deleteUser(Integer userId) {
+        userRepository.findUserByUserID(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        userRepository.deleteById(userId);
+    }
 }

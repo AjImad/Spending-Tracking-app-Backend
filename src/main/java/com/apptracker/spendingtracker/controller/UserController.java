@@ -39,8 +39,7 @@ public class UserController {
                     .body(newUser);
         } catch (IllegalArgumentException e){
             String path = "/api/users";
-            String message = "Failed to create user: " + e.getMessage();
-            ErrorResponse errorResponse = getErrorResponse(path, message);
+            ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(errorResponse);
@@ -68,6 +67,20 @@ public class UserController {
             User updatedUser = userService.updateUser(userId, user);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } catch (IllegalArgumentException e){
+            String path = "/api/users/" + userId;
+            ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+    }
+
+    @DeleteMapping(path = "/{userId}")
+    public ResponseEntity<ErrorResponse> deleteUser(@PathVariable Integer userId){
+        try{
+            userService.deleteUser(userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
             String path = "/api/users/" + userId;
             ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
             return ResponseEntity
