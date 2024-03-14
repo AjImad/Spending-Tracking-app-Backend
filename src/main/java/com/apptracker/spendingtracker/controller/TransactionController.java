@@ -1,5 +1,6 @@
 package com.apptracker.spendingtracker.controller;
 
+import com.apptracker.spendingtracker.errorResponse.ErrorResponse;
 import com.apptracker.spendingtracker.model.Transaction;
 import com.apptracker.spendingtracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,16 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/add-transaction")
-    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction){
-        Transaction transaction1 = transactionService.addTransaction(transaction);
-        return new ResponseEntity<>(transaction1, HttpStatus.OK);
+    public ResponseEntity<Object> addTransaction(@RequestBody Transaction transaction){
+        try{
+            Transaction transaction1 = transactionService.addTransaction(transaction);
+            return new ResponseEntity<>(transaction1, HttpStatus.OK);
+        } catch(IllegalArgumentException e){
+            String path = "/api/transactions/add-transaction";
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
     }
 }
