@@ -1,5 +1,8 @@
 package com.apptracker.spendingtracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -45,10 +48,10 @@ public class User {
     @UpdateTimestamp
     @Column(name = "udpated_at")
     private Date updatedAt;
-
+//    @JsonIgnore // to ensure when serializing our entity to json, we break the recursive reference loop to avoid infinite nesting.
     @OneToMany(mappedBy = "user")
     private List<Transaction> transactions;
-
+//    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<Budget> budgets;
 

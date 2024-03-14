@@ -24,6 +24,7 @@ public class UserService {
     }
 
     public User getUser(Integer userId) {
+//        System.out.println("Get User: " + userRepository.findUserWithTransactionsWithUserId(userId).orElse(null));
         return userRepository.findUserByUserID(userId).orElse(null);
     }
 

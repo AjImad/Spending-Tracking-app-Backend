@@ -39,7 +39,7 @@ public class UserController {
                     .body(newUser);
         } catch (IllegalArgumentException e){
             String path = "/api/users";
-            ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(errorResponse);
@@ -54,7 +54,7 @@ public class UserController {
         } else {
             String path = "/api/users/" + userId;
             String message = "User not found with ID: " + userId;
-            ErrorResponse errorResponse = getErrorResponse(path, message);
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, message);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(errorResponse);
@@ -68,7 +68,7 @@ public class UserController {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } catch (IllegalArgumentException e){
             String path = "/api/users/" + userId;
-            ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(errorResponse);
@@ -82,22 +82,11 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             String path = "/api/users/" + userId;
-            ErrorResponse errorResponse = getErrorResponse(path, e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(errorResponse);
         }
     }
 
-    private static ErrorResponse getErrorResponse(String path, String message) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String timestamp = now.format(formatter);
-        return ErrorResponse.builder()
-                .timestamp(timestamp)
-                .path(path)
-                .message(message)
-                .status(HttpStatus.NOT_FOUND.value())
-                .build();
-    }
 }

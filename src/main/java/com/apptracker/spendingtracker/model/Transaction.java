@@ -1,5 +1,8 @@
 package com.apptracker.spendingtracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +21,14 @@ public class Transaction {
     @SequenceGenerator(name = "trans_seq_gen", sequenceName = "trans_seq_gen", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trans_seq_gen")
     private Integer transactionID;
+    @JsonIgnoreProperties("transactions")
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user; // Foreign key User
     private Long amount;
     private Date date;
     private String note;
+    @JsonIgnoreProperties("transactions")
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category; // Foreign key Category
