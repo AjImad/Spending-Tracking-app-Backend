@@ -4,7 +4,6 @@ import com.apptracker.spendingtracker.errorResponse.ErrorResponse;
 import com.apptracker.spendingtracker.model.Category;
 import com.apptracker.spendingtracker.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +43,23 @@ public class CategoryController {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
+    }
+
+    @PutMapping("{categoryId}")
+    public ResponseEntity<Object> updateCategory(
+            @PathVariable Integer categoryId,
+            @RequestParam String categoryName
+    ){
+        try {
+            Category updatedCategory = categoryService.updateCategory(categoryId, categoryName);
+            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+        } catch (IllegalArgumentException e){
+            String path = "/api/categories/" + categoryId + "?categoryName=" + categoryName;
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
     }
 
 }
