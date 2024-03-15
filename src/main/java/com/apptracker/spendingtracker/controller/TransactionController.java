@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -55,11 +55,12 @@ public class TransactionController {
     public ResponseEntity<Object> updateTransaction(
             @PathVariable Integer transactionId,
             @RequestParam(required = false) Integer categoryId,
-            @RequestParam(required = false) Date date,
-            @RequestParam(required = false) Long amount
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) Long amount,
+            @RequestParam(required = false) String note
             ) {
         try{
-            Transaction udpatedTransaction = transactionService.udpateTransaction(transactionId, categoryId, date, amount);
+            Transaction udpatedTransaction = transactionService.udpateTransaction(transactionId, categoryId, date, amount, note);
             return new ResponseEntity<>(udpatedTransaction, HttpStatus.OK);
         } catch(IllegalArgumentException e){
             String path = "/api/transactions/" + transactionId;

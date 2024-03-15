@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -26,7 +27,7 @@ public class Transaction {
     @JoinColumn(name="user_id")
     private User user; // Foreign key User
     private Long amount;
-    private Date date;
+    private LocalDate date;
     private String note;
     @JsonIgnoreProperties("transactions")
     @ManyToOne

@@ -6,10 +6,11 @@ import com.apptracker.spendingtracker.model.User;
 import com.apptracker.spendingtracker.repository.CategoryRepository;
 import com.apptracker.spendingtracker.repository.TransactionRepository;
 import com.apptracker.spendingtracker.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,10 +41,29 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-    public Transaction udpateTransaction(Integer transactionId, Integer categoryId, Date date, Long amount) {
+    @Transactional
+    public Transaction udpateTransaction(Integer transactionId, Integer categoryId, LocalDate date, Long amount, String note) {
         Transaction storedTransaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new IllegalArgumentException("Transaction not found with ID: " + transactionId));
-        // check weather what the user want to update
-        return null;
+
+        if(categoryId != null){
+            Category storedCategory = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + categoryId));
+            System.out.println("Is category id equals? " + !categoryId.equals(storedCategory.getCategoryID()) + storedCategory.getCategoryID());
+            if(!categoryId.equals(storedTransaction.getCategory().getCategoryID())){
+                storedTransaction.setCategory(storedCategory);
+            }
+        }
+        if (date != null && date != storedTransaction.getDate()) {
+            System.out.println("Given date: " + date);
+            storedTransaction.setDate(date);
+        }
+        if(amount != null && !amount.equals(storedTransaction.getAmount())){
+            storedTransaction.setAmount(amount);
+        }
+        if(note != null && !note.equals(storedTransaction.getNote())){
+            storedTransaction.setNote(note);
+        }
+        return storedTransaction;
     }
 }
