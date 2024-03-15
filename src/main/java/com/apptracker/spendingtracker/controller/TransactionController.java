@@ -6,10 +6,10 @@ import com.apptracker.spendingtracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -25,6 +25,44 @@ public class TransactionController {
             return new ResponseEntity<>(transaction1, HttpStatus.OK);
         } catch(IllegalArgumentException e){
             String path = "/api/transactions/add-transaction";
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+    }
+
+    @GetMapping("/all-transactions")
+    public ResponseEntity<List<Transaction>> getAllTransactions(){
+        return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{transactionId}")
+    public ResponseEntity<ErrorResponse> deleteTransaction(@PathVariable Integer transactionId){
+        try{
+            transactionService.deleteTransaction(transactionId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e){
+            String path = "/api/transactions/" + transactionId;
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+    }
+
+    @PutMapping("{transactionId}")
+    public ResponseEntity<Object> updateTransaction(
+            @PathVariable Integer transactionId,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Date date,
+            @RequestParam(required = false) Long amount
+            ) {
+        try{
+            Transaction udpatedTransaction = transactionService.udpateTransaction(transactionId, categoryId, date, amount);
+            return new ResponseEntity<>(udpatedTransaction, HttpStatus.OK);
+        } catch(IllegalArgumentException e){
+            String path = "/api/transactions/" + transactionId;
             ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
