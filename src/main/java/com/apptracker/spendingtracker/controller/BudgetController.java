@@ -4,10 +4,11 @@ import com.apptracker.spendingtracker.errorResponse.ErrorResponse;
 import com.apptracker.spendingtracker.model.Budget;
 import com.apptracker.spendingtracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/budgets")
@@ -43,4 +44,18 @@ public class BudgetController {
                     .body(errorResponse);
         }
     }
+
+    @GetMapping("/users/{userId}/budgets")
+    public ResponseEntity<Object> getAllBudgets(@PathVariable("userId") Integer userId){
+        try {
+            return new ResponseEntity<>(budgetService.getAllBudgets(userId), HttpStatus.OK);
+        } catch (IllegalArgumentException e){
+            String path = "/api/budgets/users/" + userId + "/budgets";
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(errorResponse);
+        }
+    }
+
 }

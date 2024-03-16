@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BudgetService {
@@ -51,5 +53,12 @@ public class BudgetService {
         }
 
         return storeBudget;
+    }
+
+    public List<Budget> getAllBudgets(Integer userId) {
+        userRepository.findUserByUserID(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        return budgetRepository.findAllBudgetWithUserId(userId)
+                .orElse(null);
     }
 }
