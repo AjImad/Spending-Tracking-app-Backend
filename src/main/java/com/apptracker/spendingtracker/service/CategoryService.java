@@ -46,4 +46,10 @@ public class CategoryService {
         }
         return storedCategory;
     }
+
+    public void deleteCategory(Integer categoryId) {
+        categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + categoryId));
+        categoryRepository.deleteById(categoryId);
+    }
 }

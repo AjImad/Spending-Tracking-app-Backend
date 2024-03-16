@@ -62,4 +62,18 @@ public class CategoryController {
         }
     }
 
+    @DeleteMapping("{categoryId}")
+    public ResponseEntity<Object> deleteCategory(@PathVariable Integer categoryId){
+        try{
+            categoryService.deleteCategory(categoryId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch(IllegalArgumentException e){
+            String path = "/api/categories/" + categoryId;
+            ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+    }
+
 }
