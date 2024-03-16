@@ -61,4 +61,9 @@ public class BudgetService {
         return budgetRepository.findAllBudgetWithUserId(userId)
                 .orElse(null);
     }
+
+    public void deleteBudget(Integer budgetId) {
+        budgetRepository.findById(budgetId).orElseThrow(() -> new IllegalArgumentException("Budget not found with ID: " + budgetId));
+        budgetRepository.deleteById(budgetId);
+    }
 }

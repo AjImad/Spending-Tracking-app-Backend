@@ -58,4 +58,18 @@ public class BudgetController {
         }
     }
 
+    @DeleteMapping("{budgetId}")
+    public ResponseEntity<ErrorResponse> deleteBudget(@PathVariable Integer budgetId){
+       try{
+           budgetService.deleteBudget(budgetId);
+           return new ResponseEntity<>(HttpStatus.OK);
+       } catch (IllegalArgumentException e){
+           String path = "/api/budgets/" + budgetId;
+           ErrorResponse errorResponse = ErrorResponse.getErrorResponse(path, e.getMessage());
+           return ResponseEntity
+                   .status(HttpStatus.NOT_FOUND)
+                   .body(errorResponse);
+       }
+    }
+
 }
