@@ -32,7 +32,7 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/all-transactions")
+    @GetMapping("/users/{users}")
     public ResponseEntity<List<Transaction>> getAllTransactions(){
         return new ResponseEntity<>(transactionService.getAllTransactions(), HttpStatus.OK);
     }
