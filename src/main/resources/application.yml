@@ -1,7 +1,16 @@
-spring.application.name=spending-tracker
-spring.datasource.url=jdbc:postgresql://localhost:5432/spendtrackdb
-spring.datasource.name=
-spring.datasource.password=
-spring.jpa.hibernate.ddl-auto=create-drop
-spring.jpa.properties.hibernte.dialect=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.properties.hibernate.format_sql=true
+spring:
+  application:
+    name: spending-tracker
+  datasource:
+    url: ${db_url}
+    username: ${db_username}
+    password: ${db_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql

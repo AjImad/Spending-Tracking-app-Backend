@@ -1,4 +1,4 @@
-package com.apptracker.spendingtracker.ocnfig;
+package com.apptracker.spendingtracker.config;
 
 import com.apptracker.spendingtracker.model.Category;
 import com.apptracker.spendingtracker.model.CategoryType;
