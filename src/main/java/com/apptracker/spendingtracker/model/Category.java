@@ -18,7 +18,6 @@ public class Category {
     @SequenceGenerator(name = "catgry_seq_gen", sequenceName = "catgry_seq_gen", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "catgry_seq_gen")
     private Integer categoryID;
-    @Getter
     @Enumerated(EnumType.STRING)
     private CategoryType categoryType;
     private String categoryName;

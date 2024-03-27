@@ -1,0 +1,1 @@
+CREATE SEQUENCE catgry_seq_gen;
