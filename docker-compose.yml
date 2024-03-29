@@ -3,9 +3,9 @@ services:
     container_name: postgres-sql
     image: postgres
     environment:
-      POSTGRES_USER: imad
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: spendtrackdb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     networks:
@@ -14,7 +14,7 @@ services:
       - postgres:/var/lib/postgres/data
   spend-track-app:
     container_name: spend-track-container
-    image: ajimad/spend-track-image
+    image: ajimad/spend-tracker-dev
     build:
       context: .
       dockerfile: Dockerfile
